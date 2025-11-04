@@ -39,7 +39,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongepowered.gradle.vanilla.internal.Constants;
 import org.spongepowered.gradle.vanilla.internal.model.VersionManifestRepository;
-import org.spongepowered.gradle.vanilla.internal.repository.modifier.ArtifactModifier;
 import org.spongepowered.gradle.vanilla.repository.MinecraftResolver;
 import org.spongepowered.gradle.vanilla.repository.MinecraftResolverImpl;
 import org.spongepowered.gradle.vanilla.resolver.Downloader;
@@ -95,21 +94,10 @@ public abstract class MinecraftProviderService implements
      * next artifact resolution.</p>
      *
      * @param project the project to use for resolving dependencies
-     * @param modifiers the artifact modifiers to apply to the eventual output artifact
      */
-    public void primeResolver(final Project project, final Set<ArtifactModifier> modifiers) {
+    public void primeResolver(final Project project) {
         final ResolverState state = this.activeState.get();
         state.configurationSource = project.getConfigurations();
-        state.modifiers = modifiers;
-    }
-
-    public Set<ArtifactModifier> peekModifiers() {
-        final ResolverState state = this.activeState.get();
-        final @Nullable Set<ArtifactModifier> modifiers = state.modifiers;
-        if (modifiers == null) {
-            throw new GradleException("No artifact modifiers were staged for resolution operation!");
-        }
-        return modifiers;
     }
 
     public void dropState() {
@@ -222,7 +210,6 @@ public abstract class MinecraftProviderService implements
     static final class ResolverState {
 
         @MonotonicNonNull ConfigurationContainer configurationSource;
-        @Nullable Set<ArtifactModifier> modifiers;
 
     }
 

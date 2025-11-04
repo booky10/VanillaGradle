@@ -35,6 +35,5 @@ class BuildVersions {
     public static final String ASM = "{{ asmVersion }}";
     public static final String VINEFLOWER = "{{ vineFlowerVersion }}";
     public static final String MERGE_TOOL = "{{ mergeToolVersion }}";
-    public static final String ACCESS_WIDENER = "{{ accessWidenerVersion }}";
 
 }

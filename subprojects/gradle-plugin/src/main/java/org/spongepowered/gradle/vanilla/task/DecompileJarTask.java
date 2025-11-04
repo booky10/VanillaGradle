@@ -36,19 +36,14 @@ import org.gradle.api.provider.Property;
 import org.gradle.api.tasks.Classpath;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.Internal;
-import org.gradle.api.tasks.Nested;
 import org.gradle.api.tasks.Optional;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.options.Option;
 import org.gradle.internal.component.external.model.ModuleComponentArtifactIdentifier;
 import org.gradle.jvm.toolchain.JavaLauncher;
 import org.gradle.workers.WorkerExecutor;
-import org.spongepowered.gradle.vanilla.MinecraftExtension;
 import org.spongepowered.gradle.vanilla.internal.Constants;
-import org.spongepowered.gradle.vanilla.internal.MinecraftExtensionImpl;
 import org.spongepowered.gradle.vanilla.internal.repository.MinecraftProviderService;
-import org.spongepowered.gradle.vanilla.internal.repository.modifier.ArtifactModifier;
-import org.spongepowered.gradle.vanilla.internal.repository.modifier.AssociatedResolutionFlags;
 import org.spongepowered.gradle.vanilla.internal.worker.JarDecompileWorker;
 import org.spongepowered.gradle.vanilla.repository.MinecraftPlatform;
 import org.spongepowered.gradle.vanilla.repository.MinecraftResolver;
@@ -58,7 +53,6 @@ import java.io.File;
 import java.lang.management.ManagementFactory;
 import java.nio.file.Path;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -130,20 +124,11 @@ public abstract class DecompileJarTask extends DefaultTask {
         final CompletableFuture<ResolutionResult<Path>> resultFuture;
         try {
             final MinecraftProviderService minecraftProvider = this.getMinecraftProvider().get();
-            final Set<ArtifactModifier> modifiers =
-                ((MinecraftExtensionImpl) this.getProject().getExtensions().getByType(MinecraftExtension.class)).modifiers();
-
-            minecraftProvider.primeResolver(this.getProject(), modifiers);
-            final Set<AssociatedResolutionFlags> flags = EnumSet.of(AssociatedResolutionFlags.MODIFIES_ORIGINAL);
-            if (this.getForced().getOrElse(false)) {
-                flags.add(AssociatedResolutionFlags.FORCE_REGENERATE);
-            }
+            minecraftProvider.primeResolver(this.getProject());
             resultFuture = minecraftProvider.resolver().produceAssociatedArtifact(
                 this.getMinecraftPlatform().get(),
                 this.getMinecraftVersion().get(),
-                modifiers,
                 "sources",
-                flags,
                 (env, output) -> {
                     final long totalSystemMemoryBytes =
                         ((OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean()).getTotalPhysicalMemorySize() / (1024L * 1024L);

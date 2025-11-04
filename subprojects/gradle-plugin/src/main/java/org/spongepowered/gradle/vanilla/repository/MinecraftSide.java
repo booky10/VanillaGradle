@@ -46,7 +46,7 @@ import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
 public enum MinecraftSide {
-    CLIENT(DownloadClassifier.CLIENT, DownloadClassifier.CLIENT_MAPPINGS) {
+    CLIENT(DownloadClassifier.CLIENT) {
         @Override
         public Set<GroupArtifactVersion> dependencies(
             final VersionDescriptor.Full descriptor,
@@ -56,7 +56,7 @@ public enum MinecraftSide {
             return MinecraftSide.manifestLibraries(descriptor, RuleContext.create(), lib -> !lib.isNatives());
         }
     },
-    SERVER(DownloadClassifier.SERVER, DownloadClassifier.SERVER_MAPPINGS) {
+    SERVER(DownloadClassifier.SERVER) {
         private final Set<String> packages;
 
         {
@@ -112,19 +112,13 @@ public enum MinecraftSide {
     };
 
     private final DownloadClassifier executableArtifact;
-    private final DownloadClassifier mappingsArtifact;
 
-    MinecraftSide(final DownloadClassifier executableArtifact, final DownloadClassifier mappingsArtifact) {
+    MinecraftSide(final DownloadClassifier executableArtifact) {
         this.executableArtifact = executableArtifact;
-        this.mappingsArtifact = mappingsArtifact;
     }
 
     public final DownloadClassifier executableArtifact() {
         return this.executableArtifact;
-    }
-
-    public final DownloadClassifier mappingsArtifact() {
-        return this.mappingsArtifact;
     }
 
     public abstract Set<GroupArtifactVersion> dependencies(

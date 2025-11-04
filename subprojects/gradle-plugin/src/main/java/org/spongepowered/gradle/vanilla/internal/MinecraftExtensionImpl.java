@@ -41,8 +41,6 @@ import org.spongepowered.gradle.vanilla.internal.model.VersionClassifier;
 import org.spongepowered.gradle.vanilla.internal.model.VersionDescriptor;
 import org.spongepowered.gradle.vanilla.internal.repository.MinecraftProviderService;
 import org.spongepowered.gradle.vanilla.internal.repository.MinecraftRepositoryPlugin;
-import org.spongepowered.gradle.vanilla.internal.repository.modifier.AccessWidenerModifier;
-import org.spongepowered.gradle.vanilla.internal.repository.modifier.ArtifactModifier;
 import org.spongepowered.gradle.vanilla.repository.MinecraftPlatform;
 import org.spongepowered.gradle.vanilla.repository.MinecraftSide;
 import org.spongepowered.gradle.vanilla.runs.RunConfiguration;
@@ -69,7 +67,6 @@ public class MinecraftExtensionImpl implements MinecraftExtension {
     private final Property<Boolean> injectRepositories;
     private final DirectoryProperty sharedCache;
     private final DirectoryProperty projectCache;
-    private final ConfigurableFileCollection accessWideners;
 
     // Derived properties
     private final Property<VersionDescriptor.Full> targetVersion;
@@ -78,7 +75,6 @@ public class MinecraftExtensionImpl implements MinecraftExtension {
     // Internals
     private final Project project;
     private final RunConfigurationContainer runConfigurations;
-    private volatile Set<ArtifactModifier> lazyModifiers;
 
     private final Provider<Boolean> needsPrepareWorkspace;
 
@@ -89,7 +85,6 @@ public class MinecraftExtensionImpl implements MinecraftExtension {
         this.version = factory.property(String.class);
         this.platform = factory.property(MinecraftPlatform.class).convention(MinecraftPlatform.JOINED);
         this.injectRepositories = factory.property(Boolean.class).convention(project.provider(() -> !gradle.getPlugins().hasPlugin(MinecraftRepositoryPlugin.class))); // only inject if we aren't already in Settings
-        this.accessWideners = factory.fileCollection();
 
         this.assetsDirectory = factory.directoryProperty();
         this.sharedCache = factory.directoryProperty().convention(providerService.flatMap(it -> it.getParameters().getSharedCache()));
@@ -220,27 +215,6 @@ public class MinecraftExtensionImpl implements MinecraftExtension {
     @Override
     public void platform(final MinecraftPlatform platform) {
         this.platform.set(platform);
-    }
-
-    @Override
-    public void accessWideners(final Object... files) {
-        this.accessWideners.from(files);
-    }
-
-    public ConfigurableFileCollection accessWideners() {
-        return this.accessWideners;
-    }
-
-    public synchronized Set<ArtifactModifier> modifiers() {
-        if (this.lazyModifiers == null) {
-            this.accessWideners.disallowChanges();
-            final Set<ArtifactModifier> modifiers = new HashSet<>();
-            if (!this.accessWideners.isEmpty()) {
-                modifiers.add(new AccessWidenerModifier(this.accessWideners.getFiles()));
-            }
-            return this.lazyModifiers = Collections.unmodifiableSet(modifiers);
-        }
-        return this.lazyModifiers;
     }
 
     DirectoryProperty projectCache() {

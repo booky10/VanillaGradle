@@ -104,16 +104,6 @@ public interface MinecraftExtension extends MinecraftRepositoryExtension {
     void platform(MinecraftPlatform platform);
 
     /**
-     * Apply access wideners to the project.
-     *
-     * <p>Access wideners can only be added before the first time a Minecraft
-     * dependency is resolved.</p>
-     *
-     * @param file any file that can be passed to {@link Project#file(Object)}
-     */
-    void accessWideners(Object... file);
-
-    /**
      * Get run configurations configured for this project.
      *
      * <p>Every run configuration will automatically have Minecraft on its classpath.</p>

@@ -28,8 +28,6 @@ import org.spongepowered.gradle.vanilla.internal.model.GroupArtifactVersion;
 import org.spongepowered.gradle.vanilla.internal.model.VersionDescriptor;
 import org.spongepowered.gradle.vanilla.internal.model.VersionManifestRepository;
 import org.spongepowered.gradle.vanilla.internal.repository.ResolvableTool;
-import org.spongepowered.gradle.vanilla.internal.repository.modifier.ArtifactModifier;
-import org.spongepowered.gradle.vanilla.internal.repository.modifier.AssociatedResolutionFlags;
 import org.spongepowered.gradle.vanilla.resolver.Downloader;
 import org.spongepowered.gradle.vanilla.resolver.ResolutionResult;
 
@@ -74,8 +72,6 @@ public interface MinecraftResolver {
 
     CompletableFuture<ResolutionResult<MinecraftEnvironment>> provide(final MinecraftPlatform side, final String version);
 
-    CompletableFuture<ResolutionResult<MinecraftEnvironment>> provide(final MinecraftPlatform side, final String version, final Set<ArtifactModifier> modifiers);
-
     /**
      * Given a standard Minecraft artifact, produce a variant of that artifact.
      *
@@ -89,10 +85,7 @@ public interface MinecraftResolver {
      *
      * @param side the platform to base off of
      * @param version the version to base off of
-     * @param modifiers any modifiers to complete the description of the provided
-     *     argument
      * @param id An identifier for this artifact
-     * @param flags flags to configure this resolution
      * @param action the action needed to produce a variant, taking the input
      *     environment and a target path
      * @return a future returning the result of resolving a jar path
@@ -100,9 +93,7 @@ public interface MinecraftResolver {
     CompletableFuture<ResolutionResult<Path>> produceAssociatedArtifact(
         final MinecraftPlatform side,
         final String version,
-        final Set<ArtifactModifier> modifiers,
         final String id,
-        final Set<AssociatedResolutionFlags> flags,
         final BiFunction<MinecraftEnvironment, Path, CompletableFuture<?>> action
     );
 

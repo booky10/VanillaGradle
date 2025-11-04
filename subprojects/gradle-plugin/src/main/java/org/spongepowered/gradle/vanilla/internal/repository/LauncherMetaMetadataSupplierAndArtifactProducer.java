@@ -76,7 +76,7 @@ public class LauncherMetaMetadataSupplierAndArtifactProducer implements Componen
             // Request the appropriate jar, block until it's provided
             // TODO: maybe validate that the state keys of the provided modifiers actually match the artifact ID?
             final CompletableFuture<ResolutionResult<MinecraftResolver.MinecraftEnvironment>> resolutionFuture = resolver
-                .provide(platform.get(), version, providerService.peekModifiers());
+                .provide(platform.get(), version);
 
             final ResolutionResult<MinecraftResolver.MinecraftEnvironment> resolution = resolver.processSyncTasksUntilComplete(resolutionFuture);
             if (!resolution.isPresent()) {

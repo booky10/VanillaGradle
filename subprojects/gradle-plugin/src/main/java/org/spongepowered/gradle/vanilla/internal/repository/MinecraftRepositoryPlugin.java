@@ -51,7 +51,6 @@ import org.spongepowered.gradle.vanilla.MinecraftExtension;
 import org.spongepowered.gradle.vanilla.internal.Constants;
 import org.spongepowered.gradle.vanilla.internal.MinecraftExtensionImpl;
 import org.spongepowered.gradle.vanilla.internal.model.VersionClassifier;
-import org.spongepowered.gradle.vanilla.internal.repository.modifier.ArtifactModifier;
 import org.spongepowered.gradle.vanilla.internal.repository.rule.JoinedProvidesClientAndServerRule;
 import org.spongepowered.gradle.vanilla.internal.repository.rule.MinecraftIvyModuleExtraDataApplierRule;
 import org.spongepowered.gradle.vanilla.internal.util.ConfigurationUtils;
@@ -195,17 +194,17 @@ public class MinecraftRepositoryPlugin implements Plugin<Object> {
                 if (extension != null) {
                     dependency.useTarget(
                         MinecraftPlatform.GROUP
-                            + ':' + ArtifactModifier.decorateArtifactId(platform.get().artifactId(), extension.modifiers())
+                            + ':' + platform.get().artifactId()
                             + (version == null ? "" : ':' + version)
                     );
                     minecraftResolved[0] = true;
-                    service.get().primeResolver(project, extension.modifiers());
+                    service.get().primeResolver(project);
                     final MinecraftResolver resolver = providerService.resolver();
 
                     // If we do have a version, try to resolve that fixed version
                     if (version != null) {
                         try {
-                            resolver.processSyncTasksUntilComplete(resolver.provide(platform.get(), version, providerService.peekModifiers()));
+                            resolver.processSyncTasksUntilComplete(resolver.provide(platform.get(), version));
                         } catch (final InterruptedException ex) {
                             Thread.currentThread().interrupt();
                         } catch (final ExecutionException ex) {

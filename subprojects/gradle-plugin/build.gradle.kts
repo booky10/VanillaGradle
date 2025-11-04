@@ -14,9 +14,6 @@ val jarMerge by sourceSets.creating {
 val jarDecompile by sourceSets.creating {
     configurations.named(this.implementationConfigurationName) { extendsFrom(commonDeps) }
 }
-val accessWiden by sourceSets.creating {
-    configurations.named(this.implementationConfigurationName) { extendsFrom(commonDeps) }
-}
 val shadow by sourceSets.creating {
     configurations.named(this.implementationConfigurationName) { extendsFrom(commonDeps) }
 }
@@ -30,7 +27,6 @@ configurations {
     }
 }
 
-val accessWidenerVersion: String by project
 val asmVersion: String by project
 val checkerVersion: String by project
 val vineFlowerVersion: String by project
@@ -43,10 +39,6 @@ dependencies {
     commonDeps(libs.asm)
     commonDeps(libs.asm.commons)
     commonDeps(libs.asm.util)
-    commonDeps(libs.forgeAutoRenamingTool) {
-        exclude("org.ow2.asm") // Use our own ASM
-        exclude("net.sf.jopt-simple")
-    }
     commonDeps(libs.mammoth)
 
     // Just main
@@ -73,12 +65,6 @@ dependencies {
     "jarDecompileCompileOnly"(libs.vineFlower)
     implementation(jarDecompile.output)
 
-    // Access widener worker (match with Constants)
-    "accessWidenCompileOnly"(libs.accessWidener) {
-        exclude("org.ow2.asm")
-    }
-    implementation(accessWiden.output)
-
     "shadowCompileOnly"(libs.shadowPlugin)
     implementation(shadow.output)
 
@@ -94,7 +80,6 @@ sourceSets.main {
             "asmVersion" to libs.versions.asm.get(),
             "vineFlowerVersion" to libs.versions.vineFlower.get(),
             "mergeToolVersion" to libs.versions.mergeTool.get(),
-            "accessWidenerVersion" to libs.versions.accessWidener.get()
         ))
     }
 }
@@ -103,7 +88,6 @@ tasks {
     jar {
         from(jarMerge.output)
         from(jarDecompile.output)
-        from(accessWiden.output)
         from(shadow.output)
     }
 

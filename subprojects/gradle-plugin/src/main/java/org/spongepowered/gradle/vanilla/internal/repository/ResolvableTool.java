@@ -31,7 +31,6 @@ import org.spongepowered.gradle.vanilla.internal.Constants;
  */
 public enum ResolvableTool {
     JAR_MERGE(Constants.Configurations.MERGETOOL, Constants.WorkerDependencies.MERGE_TOOL),
-    ACCESS_WIDENER(Constants.Configurations.ACCESS_WIDENER, Constants.WorkerDependencies.ACCESS_WIDENER)
     ;
 
     private final String id;

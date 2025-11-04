@@ -24,7 +24,6 @@
  */
 package org.spongepowered.gradle.vanilla.internal.worker;
 
-import net.minecraftforge.mergetool.AnnotationVersion;
 import net.minecraftforge.mergetool.Merger;
 
 import java.io.IOException;
@@ -43,7 +42,7 @@ public final class JarMerger {
             serverJar.toFile(),
             outputJar.toFile()
         );
-        merger.annotate(AnnotationVersion.API, true);
+        merger.annotate(null, false);
         merger.keepData();
 
         try {
