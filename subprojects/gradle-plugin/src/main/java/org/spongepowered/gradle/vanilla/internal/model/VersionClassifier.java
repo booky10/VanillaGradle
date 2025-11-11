@@ -52,8 +52,7 @@ public enum VersionClassifier {
     @SerializedName("release")
     RELEASE,
     @SerializedName("unobfuscated")
-    UNOBFUSCATED,
-    ;
+    UNOBFUSCATED;
 
     private static final List<String> NAMES;
     private static final Map<String, VersionClassifier> BY_NAME;
