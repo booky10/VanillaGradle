@@ -3,9 +3,9 @@ version = "1.0"
 
 [versions]
 accessWidener = "2.1.0"
-asm = "9.7.1"
+asm = "9.9.1"
 checker = "3.48.4"
-vineFlower = "1.10.1"
+vineFlower = "1.11.2"
 ideaExt = "1.1.9"
 immutables = "2.10.1"
 indra = "3.1.3"
